@@ -34,6 +34,8 @@ use crate::aes_hash::*;
 #[cfg(not(all(any(target_arch = "x86", target_arch = "x86_64"), target_feature = "aes", not(miri))))]
 use crate::fallback_hash::*;
 
+use serde::{Deserialize, Serialize};
+
 #[cfg(all(feature = "runtime-rng", not(all(feature = "compile-time-rng", test))))]
 static SEEDS: OnceBox<[[u64; 4]; 2]> = OnceBox::new();
 
@@ -85,7 +87,7 @@ pub(crate) fn seeds() -> [u64; 4] {
 /// [Hasher]: std::hash::Hasher
 /// [BuildHasher]: std::hash::BuildHasher
 /// [HashMap]: std::collections::HashMap
-#[derive(Clone)]
+#[derive(Clone, Serialize, Deserialize)]
 pub struct RandomState {
     pub(crate) k0: u64,
     pub(crate) k1: u64,
